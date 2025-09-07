@@ -1,4 +1,4 @@
 export default defineConfig({
   plugins: [react()],
-  base: "/<repo-name>/",  // IMPORTANT
+  base: "/itilv4/",  // IMPORTANT
 });
