@@ -10,7 +10,7 @@ function App() {
   const [score, setScore] = useState(0);
 
   useEffect(() => {
-  fetch('/itilv4_questions.json')
+  fetch('./itilv4_questions.json')
     .then(response => response.json())
     .then(data => setQuestions(data))
     .catch(error => console.error('Error loading questions:', error));
