@@ -28,17 +28,25 @@ function App() {
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
-    } else {
-      // Calculate score
-      let calculatedScore = 0;
-      questions.forEach(q => {
-        if (selectedAnswers[q.question] === q.answer) {
-          calculatedScore++;
-        }
-      });
-      setScore(calculatedScore);
-      setShowResults(true);
     }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(prev => prev - 1);
+    }
+  };
+
+  const handleFinish = () => {
+    // Calculate score when finishing
+    let calculatedScore = 0;
+    questions.forEach(q => {
+      if (selectedAnswers[q.question] === q.answer) {
+        calculatedScore++;
+      }
+    });
+    setScore(calculatedScore);
+    setShowResults(true);
   };
 
   const handleRestart = () => {
@@ -49,18 +57,45 @@ function App() {
   };
 
   if (questions.length === 0) {
-    return <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>Loading questions</div>
+    return <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>Loading questions</div>;
   }
 
   const currentQuestion = questions[currentQuestionIndex];
 
   if (showResults) {
     const percentage = Math.round((score / questions.length) * 100);
+    const correctAnswers = questions.filter(q => selectedAnswers[q.question] === q.answer).length;
+    const incorrectAnswers = questions.length - correctAnswers;
+
     return (
       <div style={{ padding: '20px', fontFamily: 'sans-serif', textAlign: 'center' }}>
         <h1>Quiz Complete!</h1>
         <h2>Your Score: {score} / {questions.length} ({percentage}%)</h2>
-        <p>Congratulations! Review the questions to improve.</p>
+        <p>Correct Answers: {correctAnswers}</p>
+        <p>Incorrect Answers: {incorrectAnswers}</p>
+        <h3>Answer Review:</h3>
+        <table style={{ width: '80%', margin: '20px auto', borderCollapse: 'collapse', textAlign: 'left' }}>
+          <thead>
+            <tr style={{ background: '#1e40af', color: 'white' }}>
+              <th style={{ padding: '10px' }}>Question #</th>
+              <th style={{ padding: '10px' }}>Your Answer</th>
+              <th style={{ padding: '10px' }}>Correct Answer</th>
+              <th style={{ padding: '10px' }}>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            {questions.map((q, index) => (
+              <tr key={index} style={{ background: index % 2 === 0 ? '#f9fafb' : 'white', borderBottom: '1px solid #ddd' }}>
+                <td style={{ padding: '10px' }}>{index + 1}</td>
+                <td style={{ padding: '10px' }}>{selectedAnswers[q.question] || 'Not answered'}</td>
+                <td style={{ padding: '10px' }}>{q.answer}</td>
+                <td style={{ padding: '10px' }}>
+                  {selectedAnswers[q.question] === q.answer ? '✔ Correct' : '✘ Incorrect'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         <button onClick={handleRestart} style={{ padding: '10px 20px', margin: '10px', background: '#1e40af', color: 'white', border: 'none', borderRadius: '5px' }}>
           Restart Quiz
         </button>
@@ -75,7 +110,7 @@ function App() {
         Question {currentQuestionIndex + 1} of {questions.length}
       </div>
       <h3>{currentQuestion.question}</h3>
-      <ul style={{ listStyleType: 'none', padding: 0 }}>
+      <ul style={{ listStyleType: 'none', padding: '0' }}>
         {currentQuestion.options.map((option, index) => (
           <li key={index} style={{ marginBottom: '10px' }}>
             <label style={{ display: 'flex', alignItems: 'center' }}>
@@ -92,20 +127,52 @@ function App() {
           </li>
         ))}
       </ul>
-      <button
-        onClick={handleNext}
-        disabled={!selectedAnswers[currentQuestion.question]}
-        style={{
-          padding: '10px 20px',
-          background: selectedAnswers[currentQuestion.question] ? '#1e40af' : '#ccc',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: selectedAnswers[currentQuestion.question] ? 'pointer' : 'not-allowed'
-        }}
-      >
-        {currentQuestionIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question'}
-      </button>
+      <div style={{ marginTop: '20px' }}>
+        <button
+          onClick={handlePrevious}
+          disabled={currentQuestionIndex === 0}
+          style={{
+            padding: '10px 20px',
+            marginRight: '10px',
+            background: currentQuestionIndex === 0 ? '#ccc' : '#1e40af',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: currentQuestionIndex === 0 ? 'not-allowed' : 'pointer'
+          }}
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNext}
+          disabled={!selectedAnswers[currentQuestion.question]}
+          style={{
+            padding: '10px 20px',
+            marginRight: '10px',
+            background: selectedAnswers[currentQuestion.question] ? '#1e40af' : '#ccc',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: selectedAnswers[currentQuestion.question] ? 'pointer' : 'not-allowed'
+          }}
+        >
+          Next Question
+        </button>
+        <button
+          onClick={handleFinish}
+          disabled={!selectedAnswers[currentQuestion.question]}
+          style={{
+            padding: '10px 20px',
+            background: selectedAnswers[currentQuestion.question] ? '#1e40af' : '#ccc',
+            color: 'white',
+            border: 'none',
+            borderRadius: '5px',
+            cursor: selectedAnswers[currentQuestion.question] ? 'pointer' : 'not-allowed'
+          }}
+        >
+          Finish Quiz
+        </button>
+      </div>
     </div>
   );
 }
