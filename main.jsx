@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import questionsData from '/itilv4_questions.json'; // Import the JSON file
+//import questionsData from '/itilv4_questions.json'; // Import the JSON file
 
 function App() {
   const [questions, setQuestions] = useState([]);
