@@ -16,14 +16,14 @@ function App() {
     .catch(error => console.error('Error loading questions:', error));
   }, []);
   
-  useEffect(() => {
-    // Load questions from JSON
-    if (questionsData && Array.isArray(questionsData)) {
-      setQuestions(questionsData);
-    } else {
-      console.error('Invalid or empty questions data:', questionsData);
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Load questions from JSON
+  //   if (questionsData && Array.isArray(questionsData)) {
+  //     setQuestions(questionsData);
+  //   } else {
+  //     console.error('Invalid or empty questions data:', questionsData);
+  //   }
+  // }, []);
 
   const handleAnswerSelect = (questionId, selectedOption) => {
     setSelectedAnswers(prev => ({
